@@ -49,6 +49,43 @@ public class SolicitudChequeController {
         return solicitudRepository.findAll();
     }
 
+    // 2.1 EDITAR SOLICITUD (solo si está Pendiente)
+    @PutMapping("/solicitudes/{id}")
+    public ResponseEntity<?> actualizarSolicitud(@PathVariable Long id, @RequestBody SolicitudCheque cambios) {
+        return solicitudRepository.findById(id)
+                .map(solicitud -> {
+                    if (!"Pendiente".equalsIgnoreCase(solicitud.getEstado())) {
+                        return ResponseEntity.badRequest()
+                                .body("Solo se pueden editar solicitudes en estado Pendiente.");
+                    }
+                    Proveedor prov = proveedorRepository.findById(cambios.getProveedor().getId()).orElse(null);
+                    if (prov == null) {
+                        return ResponseEntity.badRequest().body("Proveedor no existe");
+                    }
+                    solicitud.setProveedor(prov);
+                    solicitud.setCuentaContableProveedor(prov.getCuentaContable());
+                    solicitud.setMonto(cambios.getMonto());
+                    solicitud.setCuentaContableBanco(cambios.getCuentaContableBanco());
+                    solicitud.setFechaProgramadaPago(
+                            cambios.getFechaProgramadaPago() != null ? cambios.getFechaProgramadaPago() : solicitud.getFechaProgramadaPago());
+                    return ResponseEntity.ok(solicitudRepository.save(solicitud));
+                }).orElse(ResponseEntity.notFound().build());
+    }
+
+    // 2.2 ELIMINAR SOLICITUD (solo si está Pendiente)
+    @DeleteMapping("/solicitudes/{id}")
+    public ResponseEntity<?> eliminarSolicitud(@PathVariable Long id) {
+        return solicitudRepository.findById(id)
+                .map(solicitud -> {
+                    if (!"Pendiente".equalsIgnoreCase(solicitud.getEstado())) {
+                        return ResponseEntity.badRequest()
+                                .body("Solo se pueden eliminar solicitudes en estado Pendiente.");
+                    }
+                    solicitudRepository.delete(solicitud);
+                    return ResponseEntity.noContent().build();
+                }).orElse(ResponseEntity.notFound().build());
+    }
+
     // 3. GENERAR O ANULAR CHEQUE (Procesamiento)
     @PostMapping("/procesar")
     public ResponseEntity<?> procesarCheque(@RequestBody ProcesarRequest request) {
