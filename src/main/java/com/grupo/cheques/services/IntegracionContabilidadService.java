@@ -106,9 +106,7 @@ public class IntegracionContabilidadService {
 
     private EnviarAsientoResponse construirRespuesta(YearMonth periodo, boolean simulacionForzada) {
         BuiltPayload built = construirPayloadInterno(periodo);
-        String msg = simulacionForzada || !properties.hasUrl()
-                ? "Simulación: configure integracion.contabilidad.url para enviar al servicio real."
-                : "Listo para enviar.";
+        String msg = "Vista previa del asiento generada correctamente.";
         return EnviarAsientoResponse.preview(
                 built.periodoStr(),
                 built.cantidad(),

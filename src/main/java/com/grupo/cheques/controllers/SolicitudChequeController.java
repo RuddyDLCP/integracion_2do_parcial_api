@@ -32,6 +32,9 @@ public class SolicitudChequeController {
         solicitud.setProveedor(prov);
         solicitud.setCuentaContableProveedor(prov.getCuentaContable());
         solicitud.setFechaRegistro(LocalDate.now());
+        if (solicitud.getFechaProgramadaPago() == null) {
+            solicitud.setFechaProgramadaPago(LocalDate.now());
+        }
         solicitud.setEstado("Pendiente"); // REGLA DE NEGOCIO PPT
 
         return ResponseEntity.ok(solicitudRepository.save(solicitud));
@@ -54,8 +57,10 @@ public class SolicitudChequeController {
                     if (request.getAccion().equals("GENERAR")) {
                         solicitud.setEstado("Cheque Generado");
                         solicitud.setNumeroCheque(request.getNumeroCheque());
+                        solicitud.setFechaPagoReal(LocalDate.now());
                     } else if (request.getAccion().equals("ANULAR")) {
                         solicitud.setEstado("Solicitud Anulada");
+                        solicitud.setFechaPagoReal(null);
                     }
                     return ResponseEntity.ok(solicitudRepository.save(solicitud));
                 }).orElse(ResponseEntity.notFound().build());

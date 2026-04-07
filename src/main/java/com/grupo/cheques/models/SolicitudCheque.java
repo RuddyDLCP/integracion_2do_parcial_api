@@ -22,6 +22,8 @@ public class SolicitudCheque {
 
     @Column(nullable = false)
     private LocalDate fechaRegistro;
+    private LocalDate fechaProgramadaPago;
+    private LocalDate fechaPagoReal;
 
     @Column(nullable = false, length = 30)
     private String estado; // "Pendiente", "Solicitud Anulada", "Cheque Generado"

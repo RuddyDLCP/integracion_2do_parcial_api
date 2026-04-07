@@ -20,7 +20,7 @@ public interface SolicitudChequeRepository extends JpaRepository<SolicitudCheque
             LocalDate fechaFin);
 
     @Query("SELECT DISTINCT s FROM SolicitudCheque s JOIN FETCH s.proveedor WHERE s.estado = :estado "
-            + "AND s.fechaRegistro BETWEEN :inicio AND :fin")
+            + "AND COALESCE(s.fechaPagoReal, s.fechaProgramadaPago, s.fechaRegistro) BETWEEN :inicio AND :fin")
     List<SolicitudCheque> findParaAsientoContable(
             @Param("estado") String estado,
             @Param("inicio") LocalDate inicio,
