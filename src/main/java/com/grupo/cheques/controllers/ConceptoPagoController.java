@@ -23,7 +23,6 @@ public class ConceptoPagoController {
 
     @PostMapping
     public ResponseEntity<?> guardar(@RequestBody ConceptoPago concepto) {
-        // VALIDACIÓN: Evitar descripción duplicada
         if (conceptoRepository.existsByDescripcionIgnoreCase(concepto.getDescripcion())) {
             return ResponseEntity.badRequest().body("Ya existe un Concepto de Pago con esta descripción.");
         }
@@ -32,7 +31,6 @@ public class ConceptoPagoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizar(@PathVariable Long id, @RequestBody ConceptoPago detalles) {
-        // VALIDACIÓN: Evitar descripción duplicada en OTRO registro al editar
         if (conceptoRepository.existsByDescripcionIgnoreCaseAndIdNot(detalles.getDescripcion(), id)) {
             return ResponseEntity.badRequest().body("Esta descripción ya está siendo usada por otro concepto.");
         }

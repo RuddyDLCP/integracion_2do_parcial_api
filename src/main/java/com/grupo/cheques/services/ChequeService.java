@@ -18,7 +18,6 @@ public class ChequeService {
             .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
 
         if ("GENERAR".equalsIgnoreCase(accion)) {
-            // Se agrega al registro el número de cheque y cambia estado [cite: 37]
             solicitud.setNumeroCheque(numeroChequeGenerado);
             solicitud.setEstado("Cheque Generado");
         } else if ("ANULAR".equalsIgnoreCase(accion)) {
@@ -27,14 +26,5 @@ public class ChequeService {
         }
 
         return solicitudRepository.save(solicitud);
-    }
-
-    // Registro de Asiento Contable [cite: 39]
-    public void enviarAsientoContabilidad(int mes, int anio) {
-        // 1. Obtener todas las solicitudes "Cheque Generado" del mes
-        // 2. Agrupar y sumar los montos por cuenta contable [cite: 40]
-        
-        // 3. Integración: Llamar al Servicio Web expuesto por Contabilidad 
-        // (Aquí utilizaremos RestTemplate o WebClient para el cliente web)
     }
 }

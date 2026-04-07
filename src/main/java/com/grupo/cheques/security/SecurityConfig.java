@@ -41,7 +41,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // 🔥 CONFIGURACIÓN CORS DEFINITIVA PARA NETLIFY 🔥
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
